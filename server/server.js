@@ -16,14 +16,16 @@ io.on('connection', (socket) => {
 	socket.on('disconnect', () =>{
 		console.log("User disconnected");
 	});
-	socket.emit('newMessage', {
-		from: "abc@gmail.com",
-		text : "Hi there!!",
-		createdAt : Date.now()
-	});
+
 	socket.on('createMessage', (message) => {
+		io.emit('newMessage', {
+			from: message.from,
+			text: message.text,
+			createdAt: new Date().getTime()
+		})
 		console.log(message);
-	})
+	});
+
 });
 app.use(express.static(publicPath));	
 
