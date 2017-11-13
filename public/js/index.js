@@ -8,3 +8,9 @@ socket.on('disconnect', function() {
 socket.on('newMessage', function(message) {
   console.log('new message', message);
 });
+/*socket.on('newUser', function(msg){
+	console.log(msg);
+});
+socket.on('newUserBroadcast', function(msg){
+	console.log(msg);
+});*/
