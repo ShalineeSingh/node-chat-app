@@ -7,6 +7,14 @@ var generateMessage = (from, text) => {
   return msg;
 };
 
+var generateLocationMessage = (from, latitude, longitude) => {
+  return {
+    from: from,
+    url: 'https://www.google.co.in/maps?q=' + latitude + ',' + longitude,
+    createdAt: new Date().getTime()
+  }
+};
 module.exports = {
-  generateMessage
+  generateMessage,
+  generateLocationMessage
 };
