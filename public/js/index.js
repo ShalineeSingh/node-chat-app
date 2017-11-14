@@ -20,11 +20,12 @@ socket.on('newMessage', function(message) {
 
 jQuery('#chatForm').on('submit', function(e) {
   e.preventDefault();
+  var msgTextBox = jQuery('[name=message');
   socket.emit('createMessage', {
     from: 'USER',
-    text: jQuery('[name=message').val()
+    text: msgTextBox.val()
   }, function() {
-    jQuery('[name=message').val('');
+    msgTextBox.val('');
   });
 });
 
@@ -33,21 +34,25 @@ locationBtn.on('click', function() {
   if (!navigator.geolocation) {
     return alert("geolocation not supported");
   }
+  locationBtn.attr('disabled', 'disabled').text('Sending location...');
   navigator.geolocation.getCurrentPosition(function(position) {
-  	socket.emit('createLocationMessage', {
-  		latitude: position.coords.latitude,
-  		longitude: position.coords.longitude
-  	});
-  	console.log(position);
+  	 locationBtn.removeAttr('disabled').text('Send location');
+    socket.emit('createLocationMessage', {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    });
+    console.log(position);
   }, function(error) {
     alert('Cannot get location');
+    locationBtn.removeAttr('disabled').text('Send location');
+
   })
 });
-socket.on('newLocationMessage', function(message){
-	var li = jQuery('<li></li>');
-	var a = jQuery('<a target="_blank">My current Location</a>');
-	li.text(`${message.from} : `);
- a.attr('href',message.url);
- li.append(a);
+socket.on('newLocationMessage', function(message) {
+  var li = jQuery('<li></li>');
+  var a = jQuery('<a target="_blank">My current Location</a>');
+  li.text(`${message.from} : `);
+  a.attr('href', message.url);
+  li.append(a);
   jQuery('#msgList').append(li);
 })
