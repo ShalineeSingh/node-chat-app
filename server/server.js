@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
+
 const { generateMessage, generateLocationMessage } = require('./utils/message');
 
 const publicPath = path.join(__dirname + '/../public');

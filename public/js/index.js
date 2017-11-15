@@ -6,17 +6,15 @@ socket.on('disconnect', function() {
   console.log('disconnected from server');
 });
 socket.on('newMessage', function(message) {
-  console.log('new message', message);
-  var li = jQuery('<li></li>');
-  li.text(`${message.from} : ${message.text}`);
-  jQuery('#msgList').append(li);
+  var time = moment(message.createdAt).format('h:mm a');
+  var template = jQuery('#template').html();
+  var html = Mustache.render(template, {
+    from: message.from,
+    text: message.text,
+    createdAt: time
+  });
+  jQuery('#msgList').append(html);
 });
-/*socket.emit('createMessage', {
-  from: "shalinee",
-  text: "from clients"
-}, function() {
-  console.log("got it");
-});*/
 
 jQuery('#chatForm').on('submit', function(e) {
   e.preventDefault();
@@ -36,7 +34,7 @@ locationBtn.on('click', function() {
   }
   locationBtn.attr('disabled', 'disabled').text('Sending location...');
   navigator.geolocation.getCurrentPosition(function(position) {
-  	 locationBtn.removeAttr('disabled').text('Send location');
+    locationBtn.removeAttr('disabled').text('Send location');
     socket.emit('createLocationMessage', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
@@ -49,10 +47,12 @@ locationBtn.on('click', function() {
   })
 });
 socket.on('newLocationMessage', function(message) {
-  var li = jQuery('<li></li>');
-  var a = jQuery('<a target="_blank">My current Location</a>');
-  li.text(`${message.from} : `);
-  a.attr('href', message.url);
-  li.append(a);
-  jQuery('#msgList').append(li);
+  var time = moment(message.createdAt).format('h:mm a');
+  var template = jQuery('#location_template').html();
+  var html = Mustache.render(template, {
+    from: message.from,
+    url: message.url,
+    createdAt: time
+  });
+  jQuery('#msgList').append(html);
 })
